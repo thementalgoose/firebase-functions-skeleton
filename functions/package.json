@@ -23,5 +23,8 @@
     "sinon": "^1.17.7",
     "ts-loader": "^2.2.2",
     "typescript": "^2.9.2"
+  },
+  "engines": {
+    "node": "8"
   }
 }
