@@ -1,25 +1,24 @@
 import * as functions from 'firebase-functions';
-import * as db from './lib/admin';
-import * as fs from 'fs';
-import * as path from 'path';
+var glob = require("glob");
 
 /*
  * Copied from https://github.com/firebase/functions-samples/issues/170
  * Should import all files which end in `.function.js` and make it an export of the class
  */
-
-// Folder where all your individual Cloud Functions files are located.
-const FUNCTIONS_FOLDER = './modules';
-
-fs.readdirSync(path.resolve(__dirname, FUNCTIONS_FOLDER))
-  .forEach(file => { // list files in the folder.
-    if ((file.endsWith('.functions.js')) && (file !== 'index.js') && (file !== 'admin.js')) {
-      const fileBaseName = file.slice(0, -3); // Remove the '.js' extension
-      const exportedModule = require(`${FUNCTIONS_FOLDER}/${fileBaseName}`);
-      for(var functionName in exportedModule) {
-        if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === functionName) {
-          exports[functionName] = exportedModule[functionName];
+glob("!(node_modules)/**/*.js", {}, (err: Error, files: string[]) =>  { 
+  files.forEach(file => { 
+    if (file.startsWith("dist/")) { 
+      file = file.replace("dist/", "");
+    }
+    let fileName = file.split("/").filter(item => item.indexOf(".js") !== -1)[0];
+    if ((fileName.endsWith('.functions.js') && fileName !== 'index.js' && fileName !== 'admin.js')) { 
+      const fileBasePath = file.slice(0, -3);
+      const exportedModule = require(`./${fileBasePath}`);
+      for (let name in exportedModule) { 
+        if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === name) { 
+          exports[name] = exportedModule[name];
         }
       }
     }
   });
+})
