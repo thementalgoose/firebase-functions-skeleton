@@ -29,10 +29,10 @@ firebase deploy --only functions
 
 - Functions are written in Typescript under functions/src
     - src/
-        - `index.ts` - **Do not modify** - Pulls in all files that end in `.functions.js` into the index for export
+        - `index.ts` - **Do not modify** - Pulls in all files that end in `.functions.js` into the index for export (after compile)
         - lib/ 
             - `admin.ts` - **Do not modify** - Will setup the Admin SDK 
-        - modules/
+        - any_folder/
             - `sample.functions.ts` - Typescript file handling functions
             - etc....
 
@@ -41,4 +41,4 @@ firebase deploy --only functions
 
 ## To add more functions
 
-- Either add to a folder or just create a `X.functions.ts` file inside `/functions/src/modules/` folder. When running build / deploy, it will build out and include it in the deployment 
+- Make a file named `<filename>.functions.ts` anywhere inside the project folder. When running build / deploy, the index file will scan for all files that end in `.functions.ts` and include them in the exports for firebase
